@@ -1,5 +1,3 @@
-# Build your own OAuth2 Server with Symfony and PHP
+# Symfony Mikrotic Router Api client
 
-This is the sample app accompanying my blog post at https://davegebler.com/post/php/build-oauth2-server-php-symfony
-
-## Setup instructions - Docker
+## Setup instructions
