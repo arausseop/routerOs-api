@@ -1,0 +1,14 @@
+App\Entity\Main\AccessToken:
+    attributes:
+        id:
+            groups: ['accessToken']
+        client:
+            groups: ['accessToken']
+        user:
+            groups: ['accessToken']
+        token:
+            groups: []
+        scope:
+            groups: []
+        expiresAt:
+            groups: []

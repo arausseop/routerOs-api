@@ -1,0 +1,64 @@
+App\Entity\Main\User:
+    attributes:
+        # id:
+        #     groups: ['user_list', 'user_show', 'user_new', 'user_edit', 'company_list', 'company_show', 'company_new', 'company_edit','user_company_list','user_company_show','user_company_edit','user_company_new', 'notification_list','notification_show']
+        uuid:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        email:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        roles:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        oAuth2UserConsents:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        roleGroups:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        firstName:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        lastName:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        dni:
+            groups:
+                - 'users'
+        
+        avatar:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        deleted:
+            groups:
+                - 'users'
+        
+        active:
+            groups:
+                - 'users'
+        
+        expired:
+            groups:
+                - 'users'
+                - 'whoimi'
+        
+        expiredAt:
+            groups:
+                - 'users'

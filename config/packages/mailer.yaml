@@ -1,0 +1,11 @@
+framework:
+    mailer:
+        # dsn: '%env(MAILER_DSN)%'
+        dsn: '%env(MAILER_GMAIL_DSN)%'
+    
+when@dev:
+    framework:
+        mailer:
+            dsn: '%env(MAILER_GMAIL_DSN)%'
+            envelope:
+                recipients: ['arausseo@gmail.com']

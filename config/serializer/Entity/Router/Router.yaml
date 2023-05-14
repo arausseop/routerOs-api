@@ -1,0 +1,38 @@
+App\Entity\Main\Router:
+    attributes:
+        # id:
+        #     groups:
+        #         - 'customer'
+        uuid:
+            groups:
+                - 'routers'
+                
+        identity:
+            groups:
+                - 'routers'
+                
+        ipAddress:
+            groups:
+                - 'routers'
+                
+        login:
+            groups:
+                - 'routers'
+                
+        password:
+            groups:
+                - 'routers'
+
+        name:
+            groups:
+                - 'routers'
+
+        description:
+            groups:
+                - 'routers'
+                
+        connect:
+            groups:
+                - 'routers'
+                
+        

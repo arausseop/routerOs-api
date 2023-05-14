@@ -1,0 +1,25 @@
+App\Entity\Main\OAuth2UserConsent:
+    attributes:
+        id:
+            groups: 
+                - 'oauth2UserConsents'
+                - 'users'
+        created:
+            groups: 
+                - 'oauth2UserConsents'
+        expires:
+            groups: 
+                - 'oauth2UserConsents'
+        scopes:
+            groups: 
+                - 'oauth2UserConsents'
+                - 'users'
+        ipAddress:
+            groups: 
+                - 'oauth2UserConsents'
+        client:
+            groups: 
+                - 'oauth2UserConsents'
+        user:
+            groups: 
+                - 'oauth2UserConsents'

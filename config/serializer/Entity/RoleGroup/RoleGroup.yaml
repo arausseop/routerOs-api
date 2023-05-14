@@ -1,0 +1,26 @@
+App\Entity\Main\RoleGroup:
+    attributes:
+        # id:
+        #     groups: ['user_list', 'user_show', 'user_new', 'user_edit', 'company_list', 'company_show', 'company_new', 'company_edit','user_company_list','user_company_show','user_company_edit','user_company_new', 'notification_list','notification_show']
+        # uuid:
+        #     groups: 
+        #         - 'whois'
+        #         - 'users'
+        uuid:
+            groups:
+                - 'roleGroups'
+                - 'users'
+        name:
+            groups:
+                - 'roleGroups'
+                - 'users'
+        active:
+            groups:
+                - 'roleGroups'
+        deleted:
+            groups:
+                - 'roleGroups'
+        roles:
+            groups:
+                - 'roleGroups'
+        
