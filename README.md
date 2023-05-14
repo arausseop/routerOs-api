@@ -1,3 +1,3 @@
-# Symfony Mikrotic Router Api Rest Basic Managmentc
+# Symfony Mikrotic Router Basic Api Rest Managment
 
 ## Setup instructions
