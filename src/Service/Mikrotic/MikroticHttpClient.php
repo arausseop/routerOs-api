@@ -2,13 +2,13 @@
 
 namespace App\Service\Mikrotic;
 
+use App\Model\Exception\Mikrotic\MikroticException;
+use App\Model\Exception\System\UrlException;
 use App\Service\Mikrotic\MikroticHttpClientInterface;
-use chillerlan\TinyCurl\URL;
-use chillerlan\TinyCurl\URLException;
 use Symfony\Contracts\HttpClient\HttpClientInterface as SymfonyHttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
-use TomTom\Telematics\MikroticException;
-use TomTom\Telematics\MikroticResponse;
+
+
 
 class MikroticHttpClient extends MikroticHttpClientAbstract
 {
@@ -34,32 +34,42 @@ class MikroticHttpClient extends MikroticHttpClientAbstract
      * @param mixed  $body
      * @param array  $headers
      *
-     * @return \TomTom\Telematics\MikroticResponse
-     * @throws \TomTom\Telematics\MikroticException
+     * @return \App\Service\Mikrotic\MikroticResponse
+     * @throws \App\Model\Exception\Mikrotic\MikroticException
      */
-    public function request(array $params = [], string $method = 'GET', $body = null, array $headers = []): MikroticResponse
+    public function request(array $apiEndpointParams = [], array $params = [], string $method = 'GET', $body = null, array $headers = []): MikroticResponse
     {
-
         try {
-            $url = new URL(self::API_BASE, $params, $method, $body, $this->normalizeHeaders($headers));
-        } catch (URLException $e) {
+
+            dd([$apiEndpointParams, $params]);
+            $mikroticApiUrl = $this->getUrlApiBaseWithEndpointInterface($apiEndpointParams);
+
+            $url = new Url($mikroticApiUrl, $params, $method, $body, $this->normalizeHeaders($headers));
+        } catch (UrlException $e) {
             throw new MikroticException('invalid URL: ' . $e->getMessage());
         }
 
+        // dd($url->headers);
+        $headersMap = array_values(
+
+            $url->headers
+        );
 
         $response = $this->httpClient->request(
             $url->method,
             $url->url,
             [
-                'headers' => $url->headers,
+                'verify_peer' => false,
+                'headers' => $headersMap,
                 'query' => $url->params
             ]
         );
 
-
         // $response = $this->httpClient->fetch($url);
+        // dd(['devolverResponse', $response]);
 
         return new MikroticResponse([
+            'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
             'body'    => $response->GetContent(),
         ]);

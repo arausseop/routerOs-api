@@ -44,7 +44,7 @@ class RouterController extends AbstractFOSRestController
     //  * @param ParamFetcherInterface $paramFetcher
     //  * @param $page
     //  */
-    #[Rest\Get('/', name: '_list')]
+    #[Rest\Get('', name: '_list')]
     #[QueryParam(name: 'page', requirements: '\d+', strict: false, nullable: true, allowBlank: true, description: 'page number')]
     #[QueryParam(name: 'itemsPerPage', requirements: '\d+', strict: false, nullable: true, allowBlank: true, description: 'items Per Page')]
     #[QueryParam(name: 'searchText', strict: false, nullable: true, allowBlank: true, description: 'Text to search')]

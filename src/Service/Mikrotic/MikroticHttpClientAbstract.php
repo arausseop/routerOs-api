@@ -50,4 +50,10 @@ abstract class MikroticHttpClientAbstract implements MikroticHttpClientInterface
 
         return $normalized_headers;
     }
+
+    public function getUrlApiBaseWithEndpointInterface($apiEndpointParams): string
+    {
+        return "https://" . $apiEndpointParams['ipAddress'] . ":" . $apiEndpointParams['addressPort'] . "/rest/" . $apiEndpointParams['apiEndpoint'] . "/" . $apiEndpointParams['apiMethod'];
+        // return self::API_BASE . '' . $apiEndpoint;
+    }
 }

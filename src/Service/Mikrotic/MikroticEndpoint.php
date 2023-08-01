@@ -12,7 +12,7 @@
 
 namespace App\Service\Mikrotic;
 
-use App\Model\Exception\MikroticException;
+use App\Model\Exception\Mikrotic\MikroticException;
 
 
 // use TomTom\Telematics\HTTP\HTTPClientInterface;
@@ -24,65 +24,99 @@ class MikroticEndpoint extends CustomMikroticConnect
 {
 
 
-	/**
-	 * __anonymous constructor.
-	 *
-	 * @param \App\Service\Mikrotic\MikroticHttpClientInterface $http
-	 * @param \App\Service\Mikrotic\MikroticOptions $options
-	 * @param string $interface
-	 */
-	public function __construct(MikroticHttpClientInterface $http, MikroticOptions $options, string $interface)
-	{
-		parent::__construct($http, $options);
+  /**
+   * __anonymous constructor.
+   *
+   * @param \App\Service\Mikrotic\MikroticHttpClientInterface $http
+   * @param \App\Service\Mikrotic\MikroticOptions $options
+   * @param string $interface
+   */
+  public function __construct(
+    MikroticHttpClientInterface $http,
+    MikroticOptions $options,
+    string $interface,
+    MikroticHeaderOptions $customHeaders
+  ) {
+    parent::__construct($http, $options, $customHeaders);
 
-		$this->endpoint = $interface;
-	}
+    $this->endpoint = $interface;
+  }
 
-	/**
-	 * @param string $method
-	 * @param array $arguments
-	 *
-	 * @todo rate limits
-	 *
-	 * @return MikroticResponse
-	 * @throws MikroticException
-	 */
-	// public function __call(string $method, array $arguments): MikroticResponse
-	public function __call(string $method, array $arguments)
-	{
+  /**
+   * @param string $apiMethod
+   * @param array $arguments
+   *
+   * @todo rate limits
+   *
+   * @return MikroticResponse
+   * @throws MikroticException
+   */
+  // public function __call(string $apiMethod, array $arguments): MikroticResponse
+  public function __call(string $apiMethod, array $arguments)
+  {
 
-		if (isset($this->method_map[$this->endpoint]) && array_key_exists($method, $this->method_map[$this->endpoint])) {
+    if (isset($this->method_map[$this->endpoint]) && array_key_exists($apiMethod, $this->method_map[$this->endpoint])) {
 
-			$_method = $this->method_map[$this->endpoint][$method];
+      $_method = $this->method_map[$this->endpoint][$apiMethod];
 
-			// ...limiter
+      $_apiEndpoint = $this->method_map[$this->endpoint]['apiEndpoint'];
+      $_httpMethod = $this->method_map[$this->endpoint][$apiMethod]['method'];
 
-			// method parameters
-			$params = isset($arguments[0]) && !empty($arguments[0]) ? $arguments[0] : [];
+      // dd($_method, $_apiEndpoint);
+      // ...limiter
 
-			if (isset($_method['required']) && !empty($_method['required']) && empty(array_intersect($_method['required'], array_keys($params)))) {
-				throw new MikroticException('required parameter missing');
-			}
+      // method parameters
+      $params = isset($arguments[0]) && !empty($arguments[0]) ? $arguments[0] : [];
 
-			// date range
-			if (isset($arguments[1]) && !empty($arguments[1])) {
-				$params = array_merge($params, $this->dateRangeFilter($arguments[1]));
-			}
+      if (isset($_method['required']) && !empty($_method['required']) && empty(array_intersect($_method['required'], array_keys($params)))) {
+        throw new MikroticException('required parameter missing');
+      }
 
-			$params = array_merge($this->options->__toArray(), $params, ['action' => $method]);
+      // date range
+      if (isset($arguments[1]) && !empty($arguments[1])) {
+        $params = array_merge($params, $this->dateRangeFilter($arguments[1]));
+      }
 
-			foreach ($params as $param => $value) {
+      //! Resquest params
+      $params = array_merge($this->options->__toArray(), $params);
 
-				if (is_null($value)) {
-					unset($params[$param]);
-				} elseif (is_bool($value)) {
-					$params[$param] = $value ? 'true' : 'false';
-				}
-			}
+      foreach ($params as $param => $value) {
 
-			return $this->http->request($params);
-		}
+        if (is_null($value) || in_array($param, ['username', 'password', 'ipAddress', 'verificationPeer'])) {
+          unset($params[$param]);
+        } elseif (is_bool($value)) {
+          $params[$param] = $value ? 'true' : 'false';
+        }
+      }
 
-		throw new MikroticException('method does not exist in class "' . $this->endpoint . '": ' . $method);
-	}
+
+      $headers = $this->getCustomRequestHeader($this->options->__toArray(), $this->customHeaders);
+
+      //TODO: Settings headers request
+      // dd([$apiMethod, $_apiEndpoint]);
+      return $this->http->request(
+        [
+          'apiMethod' => $apiMethod,
+          'apiEndpoint' => $_apiEndpoint,
+          'ipAddress' => $this->options->ipAddress,
+          'addressPort' => 16969, //TODO: setcustom address port
+        ],
+        $params,
+        $_httpMethod,
+        null,
+        $headers
+      );
+    }
+
+    throw new MikroticException('method does not exist in class "' . $this->endpoint . '": ' . $apiMethod);
+  }
+
+  private function getCustomRequestHeader($options, $headerOptions): array
+  {
+    // dd($options);
+    $base64AuthorizationWhitPassword = base64_encode(sprintf('%s:%s', $options['username'], $options['password']));
+    return [
+      'Authorization' => sprintf('Basic %s', $base64AuthorizationWhitPassword)
+    ];
+  }
 }

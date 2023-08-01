@@ -86,18 +86,20 @@ class RouterManager
     {
         try {
             $base64AuthorizationWhitPassword = base64_encode(sprintf('%s:%s', $login, $password));
-            $base64AuthorizationWhitoutPassword = base64_encode(sprintf('%s:%s', $login, ''));
+            // $base64AuthorizationWhitoutPassword = base64_encode(sprintf('%s:%s', $login, ''));
 
             $response = $this->httpClient->request(
                 'GET',
-                "https://$ipAddress/rest/system/identity",
+                "https://$ipAddress:16969/rest/system/identity",
                 [
                     'verify_peer' => false,
                     'headers' => [
-                        'Authorization' => sprintf('Basic %s', $base64AuthorizationWhitoutPassword),
+                        // 'Authorization' => sprintf('Basic %s', $base64AuthorizationWhitoutPassword),
+                        'Authorization' => sprintf('Basic %s', $base64AuthorizationWhitPassword),
                     ]
                 ]
             );
+            // dd($response->getStatusCode());
             return ['statusCode' => $response->getStatusCode(), 'content' => json_decode($response->getContent(), true)];
         } catch (\Throwable $th) {
             return ['statusCode' => $th->getCode(), 'error' => $th->getMessage()];

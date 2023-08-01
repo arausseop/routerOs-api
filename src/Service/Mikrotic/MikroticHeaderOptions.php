@@ -2,7 +2,7 @@
 
 namespace App\Service\Mikrotic;
 
-class MikroticOptions extends Container
+class MikroticHeaderOptions extends Container
 {
 
 	/**

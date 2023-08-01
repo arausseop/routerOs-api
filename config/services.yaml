@@ -4,8 +4,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    env(MONGODB_URL): ''
-    env(MONGODB_DB): ''
     tenant_db_credentials: ''
 
 services:
@@ -47,11 +45,6 @@ services:
         calls:
             # - setNormalizer: ['@serializer.normalizer.object']
             -   setBaseNormalizer: ['@serializer.normalizer.object']
-    
-    # MongoDb Event
-    App\EventSubscriber\MyEventSubscriber:
-        tags:
-            - { name: doctrine.event_listener, connection: default, event: postLoad}
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

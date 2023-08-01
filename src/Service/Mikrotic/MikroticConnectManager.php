@@ -3,7 +3,7 @@
 namespace App\Service\Mikrotic;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use TomTom\Telematics\MikroticOptions;
+
 
 class MikroticConnectManager
 {
@@ -13,6 +13,7 @@ class MikroticConnectManager
         private readonly MikroticHttpClientInterface $customHttpClient,
         private readonly CustomMikroticConnect $mikroticConnect,
         private readonly MikroticOptions $mikroticOptions,
+        private readonly MikroticHeaderOptions $mikroticHeaderOptions,
     ) {
     }
 
@@ -21,13 +22,22 @@ class MikroticConnectManager
         // $mikroticApiUrl = $this->container->getParameter('mikrotic.api.base');
 
         $mikroticOptions = new $this->mikroticOptions([
-            'account'  => $customerMikroticParamsConnect['account'],
             'username' => $customerMikroticParamsConnect['username'],
             'password' => $customerMikroticParamsConnect['password'],
-            'apikey'   => $customerMikroticParamsConnect['apikey'],
-            'lang'     => 'en',
+            'ipAddress' => $customerMikroticParamsConnect['ipAddress'],
+            'verificationPeer' => $customerMikroticParamsConnect['verificationPeer'],
         ]);
 
-        return (new $this->mikroticConnect($this->customHttpClient, $mikroticOptions));
+        $microticCustomerHeaders = new $this->mikroticHeaderOptions([
+            'customerHeaders' => [
+                'username' => $customerMikroticParamsConnect['username'],
+                'password' => $customerMikroticParamsConnect['password'],
+                'ipAddress' => $customerMikroticParamsConnect['ipAddress'],
+                'verificationPeer' => $customerMikroticParamsConnect['verificationPeer'],
+            ]
+        ]);
+
+
+        return (new $this->mikroticConnect($this->customHttpClient, $mikroticOptions, $microticCustomerHeaders));
     }
 }
